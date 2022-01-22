@@ -34,3 +34,36 @@ const questions = [
 let score = 0;
 let questionIndex = 0;
 
+
+const headerContaier = document.getElementById('header');
+const listContainer = document.getElementById('list');
+const submitBtn = document.getElementById('submit')
+clearPage();
+function clearPage() {
+	headerContaier.innerHTML = '';
+
+	listContainer.innerHTML = '';
+
+
+}
+
+function showQuestions() {
+
+	const headerTemplate = `<h2 class="title">${questions[questionIndex]['question']}</h2>`
+
+	headerContaier.innerHTML = headerTemplate
+
+	questions.forEach((element) => {
+		listContainer.innerHTML += `	<li>
+				<label>
+					<input type="radio" class="answer" name="answer" />
+					<span>${element.answers[questionIndex]}</span>
+				</label>
+			</li>
+			<li>`
+	}
+
+	);
+}
+
+showQuestions()
