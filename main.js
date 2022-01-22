@@ -1,3 +1,5 @@
+
+
 const questions = [
 	{
 		question: "Какой язык работает в браузере?",
@@ -38,13 +40,12 @@ let questionIndex = 0;
 const headerContaier = document.getElementById('header');
 const listContainer = document.getElementById('list');
 const submitBtn = document.getElementById('submit')
+
 clearPage();
 function clearPage() {
+
 	headerContaier.innerHTML = '';
-
 	listContainer.innerHTML = '';
-
-
 }
 
 function showQuestions() {
@@ -52,18 +53,68 @@ function showQuestions() {
 	const headerTemplate = `<h2 class="title">${questions[questionIndex]['question']}</h2>`
 
 	headerContaier.innerHTML = headerTemplate
-
-	questions.forEach((element) => {
-		listContainer.innerHTML += `	<li>
+	questions[questionIndex]['answers'].forEach((item, index) =>
+		listContainer.innerHTML += `
+			<li>
 				<label>
-					<input type="radio" class="answer" name="answer" />
-					<span>${element.answers[questionIndex]}</span>
+					<input value = ${index + 1}  type="radio" class="answer" name="answer" />
+					<span>${item}</span>
 				</label>
 			</li>
 			<li>`
-	}
 
 	);
+
 }
 
 showQuestions()
+
+submitBtn.addEventListener('click', checkAnswers)
+
+function checkAnswers() {
+	const checkedRadio = listContainer.querySelector('input[type=radio]:checked')
+
+	if (!checkedRadio) {
+		submitBtn.blur()
+		return
+	}
+	const userAnswer = (+checkedRadio.value)
+
+	if (userAnswer === questions[questionIndex]['correct']) {
+		score++
+	}
+	console.log(userAnswer, score)
+
+	if (questionIndex !== questions.length - 1) {
+		questionIndex++
+		clearPage();
+		showQuestions();
+	} else {
+		clearPage()
+		showResults()
+	}
+}
+
+function showResults() {
+	let title, message, result;
+
+	if (score === questions.length) {
+		title = 'Поздравляем 🎉';
+		message = 'Вы ответили верно на все вопросы !🏆';
+	} else if ((score * 100) / questions.length >= 50) {
+		title = 'Неплохой результат';
+		message = 'Вы дали более половины плавильных ответов';
+	}
+	result = `${score} из ${questions.length}`;
+	headerContaier.innerHTML = `
+			<h2 class="title">${title}</h2>
+			<h3 class="summary">${message}</h3>
+			<p class="result">${result}</p>
+		`;
+
+	submitBtn.blur();
+	submitBtn.innerText = 'Играть заново'
+	submitBtn.onclick = () => history.go()
+
+
+}
